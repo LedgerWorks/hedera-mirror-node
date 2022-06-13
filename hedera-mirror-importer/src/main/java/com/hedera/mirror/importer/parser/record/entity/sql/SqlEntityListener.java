@@ -82,7 +82,7 @@ import com.hedera.mirror.importer.repository.RecordFileRepository;
 
 @Log4j2
 @Named
-@Order(0)
+@Order(1)
 @ConditionOnEntityRecordParser
 public class SqlEntityListener implements EntityListener, RecordStreamFileListener {
 
