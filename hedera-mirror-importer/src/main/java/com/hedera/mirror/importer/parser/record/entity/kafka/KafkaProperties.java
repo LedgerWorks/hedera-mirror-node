@@ -1,4 +1,4 @@
-package com.hedera.mirror.importer.parser.record.entity.sql;
+package com.hedera.mirror.importer.parser.record.entity.kafka;
 
 /*-
  * ‌
