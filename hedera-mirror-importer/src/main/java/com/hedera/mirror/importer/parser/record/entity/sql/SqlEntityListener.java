@@ -72,6 +72,7 @@ import com.hedera.mirror.common.domain.transaction.TransactionSignature;
 import com.hedera.mirror.importer.domain.EntityIdService;
 import com.hedera.mirror.importer.exception.ImporterException;
 import com.hedera.mirror.importer.exception.ParserException;
+import com.hedera.mirror.importer.parser.StreamFileListener;
 import com.hedera.mirror.importer.parser.batch.BatchPersister;
 import com.hedera.mirror.importer.parser.record.RecordStreamFileListener;
 import com.hedera.mirror.importer.parser.record.entity.ConditionOnEntityRecordParser;
@@ -82,9 +83,9 @@ import com.hedera.mirror.importer.repository.RecordFileRepository;
 
 @Log4j2
 @Named
-@Order(0)
+@Order(1)
 @ConditionOnEntityRecordParser
-public class SqlEntityListener implements EntityListener, RecordStreamFileListener {
+public class SqlEntityListener implements EntityListener, StreamFileListener<RecordFile> {
 
     private final BatchPersister batchPersister;
     private final EntityIdService entityIdService;
