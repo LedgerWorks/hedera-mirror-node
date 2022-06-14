@@ -43,6 +43,7 @@ import com.hedera.mirror.common.domain.transaction.Transaction;
 import com.hedera.mirror.common.domain.transaction.TransactionSignature;
 import com.hedera.mirror.importer.exception.ImporterException;
 import com.hedera.mirror.importer.exception.ParserException;
+import com.hedera.mirror.importer.parser.StreamFileListener;
 import com.hedera.mirror.importer.parser.record.RecordStreamFileListener;
 import com.hedera.mirror.importer.parser.record.entity.ConditionOnEntityRecordParser;
 import com.hedera.mirror.importer.parser.record.entity.EntityBatchCleanupEvent;
@@ -61,7 +62,7 @@ import lombok.extern.log4j.Log4j2;
 // consumer
 @Order(0)
 @ConditionOnEntityRecordParser
-public class KafkaEntityListener implements EntityListener, RecordStreamFileListener {
+public class KafkaEntityListener implements EntityListener, StreamFileListener<RecordFile> {
 
     private final KafkaProperties kafkaProperties;
 
