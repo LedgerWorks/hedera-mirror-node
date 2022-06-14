@@ -106,7 +106,7 @@ public class KafkaEntityListener implements EntityListener, StreamFileListener<R
     private void executeBatches() {
         try {
             Stopwatch stopwatch = Stopwatch.createStarted();
-            log.info("Processing transactions: {}", transactions);
+            log.info("Processing {} transactions", transactions.size());
             log.info("Completed batch inserts in {}", stopwatch);
         } catch (ParserException e) {
             throw e;
