@@ -49,7 +49,7 @@ import com.hedera.mirror.importer.parser.record.entity.EntityBatchSaveEvent;
 @ConditionOnEntityRecordParser
 @Log4j2
 @Named
-@Order(2)
+@Order(3)
 @RequiredArgsConstructor
 public class NotifyingEntityListener implements BatchEntityListener {
 
