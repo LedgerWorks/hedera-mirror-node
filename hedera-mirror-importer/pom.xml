@@ -27,6 +27,8 @@
         <sql-formatter.version>2.0.3</sql-formatter.version>
         <testcontainers.version>1.17.6</testcontainers.version>
         <velocity.version>2.3</velocity.version>
+        <kafka.version>3.2.0</kafka.version>
+        <spring-kafka.version>2.8.6</spring-kafka.version>
     </properties>
 
     <dependencyManagement>
@@ -57,6 +59,11 @@
         <dependency>
             <groupId>com.hedera</groupId>
             <artifactId>hedera-mirror-common</artifactId>
+            <version>${release.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hedera</groupId>
+            <artifactId>hedera-mirror-protobuf</artifactId>
             <version>${release.version}</version>
         </dependency>
         <dependency>
@@ -198,6 +205,12 @@
             <artifactId>netty-nio-client</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-resolver-dns-native-macos</artifactId>
+            <classifier>osx-aarch_64</classifier>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
         </dependency>
@@ -214,6 +227,16 @@
             <groupId>org.web3j</groupId>
             <artifactId>core</artifactId>
             <version>${web3j.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.kafka</groupId>
+          <artifactId>kafka-clients</artifactId>
+          <version>${kafka.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.springframework.kafka</groupId>
+          <artifactId>spring-kafka</artifactId>
+          <version>${spring-kafka.version}</version>
         </dependency>
         <!-- Test -->
         <dependency>
