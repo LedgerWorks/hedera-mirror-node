@@ -92,7 +92,7 @@ import com.hedera.mirror.importer.util.Utility;
 
 @Log4j2
 @Named
-@Order(0)
+@Order(1)
 @ConditionOnEntityRecordParser
 public class SqlEntityListener implements EntityListener, RecordStreamFileListener {
 
