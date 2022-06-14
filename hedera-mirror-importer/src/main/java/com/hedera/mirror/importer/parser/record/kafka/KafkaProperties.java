@@ -1,4 +1,4 @@
-package com.hedera.mirror.importer.parser.record;
+package com.hedera.mirror.importer.parser.record.kafka;
 
 /*-
  * ‌
@@ -20,7 +20,20 @@ package com.hedera.mirror.importer.parser.record;
  * ‍
  */
 
-import com.hedera.mirror.importer.parser.StreamItemListener;
-import com.hedera.mirror.common.domain.transaction.RecordItem;
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
-public interface RecordItemListener extends StreamItemListener<RecordItem> { }
+@Data
+@ConfigurationProperties("hedera.mirror.importer.parser.record.kafka")
+public class KafkaProperties {
+
+    private boolean enabled = false;
+
+    private String bootstrapServers = "";
+
+    private String producerApiKey = "";
+
+    private String producerApiKeySecret = "";
+
+    private String recordItemsTopic = "";
+}

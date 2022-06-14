@@ -55,7 +55,9 @@ import com.hedera.mirror.importer.config.MirrorDateRangePropertiesProcessor;
 // Same database is used for all tests, so clean it up before each test.
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:db/scripts/cleanup.sql")
 @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:db/scripts/cleanup.sql")
-@SpringBootTest
+@SpringBootTest(properties = {
+    "hedera.mirror.importer.parser.record.entity.kafka.enabled=false"
+})
 @Import(IntegrationTestConfiguration.class)
 public abstract class IntegrationTest {
 
