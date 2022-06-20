@@ -20,20 +20,22 @@ package com.hedera.mirror.importer.parser.record.entity.kafka;
  * ‍
  */
 
-import javax.validation.constraints.Min;
-import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import com.hedera.mirror.importer.parser.record.entity.ConditionOnEntityRecordParser;
+import lombok.Data;
 
 @Data
-@ConditionOnEntityRecordParser
 @ConfigurationProperties("hedera.mirror.importer.parser.record.entity.kafka")
 public class KafkaProperties {
 
-    @Min(1)
-    private int batchSize = 20_000;
-
-    // private boolean enabled = false;
     private boolean enabled = true;
+
+    private String bootstrapServers = "";
+
+    private String producerApiKey = "";
+
+    private String producerApiKeySecret = "";
+
+    private String transactionsTopic = "";
+
 }
