@@ -27,7 +27,6 @@ const ContractLogResultsViewModel = require('./contractResultLogViewModel');
 const ContractResultStateChangeViewModel = require('./contractResultStateChangeViewModel');
 const ContractResultViewModel = require('./contractResultViewModel');
 const {TransactionResult} = require('../model');
-const {TINYBAR_IN_WEIBAR} = require('../constants');
 const utils = require('../utils');
 const EntityId = require('../entityId');
 
@@ -54,10 +53,10 @@ class ContractResultDetailsViewModel extends ContractResultViewModel {
 
     this.block_hash = utils.addHexPrefix(recordFile.hash);
     this.block_number = recordFile.index;
+    this.hash = utils.toHexStringNonQuantity(transaction.transactionHash);
     this.logs = contractLogs.map((contractLog) => new ContractLogResultsViewModel(contractLog));
     this.result = TransactionResult.getName(transaction.result);
     this.transaction_index = transaction.index;
-    this.hash = utils.toHexStringNonQuantity(transaction.transactionHash);
 
     this.state_changes = contractStateChanges.map(
       (contractStateChange) => new ContractResultStateChangeViewModel(contractStateChange)
@@ -82,7 +81,7 @@ class ContractResultDetailsViewModel extends ContractResultViewModel {
 
     if (!_.isNil(transaction.type)) {
       this.access_list = utils.toHexStringNonQuantity(transaction.accessList);
-      this.amount = transaction.value && toBigIntBE(transaction.value) / TINYBAR_IN_WEIBAR;
+      this.amount = transaction.value && toBigIntBE(transaction.value);
       this.chain_id = utils.toHexStringQuantity(transaction.chainId);
 
       if (!_.isNil(contractResult.senderId)) {

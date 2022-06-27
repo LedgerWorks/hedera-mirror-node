@@ -1,74 +1,74 @@
 apiVersion: v2
-appVersion: "0.57.2"
+appVersion: "0.58.0"
 dependencies:
-  - alias: grpc
-    condition: grpc.enabled
-    name: hedera-mirror-grpc
-    repository: file://../hedera-mirror-grpc
-    tags:
-      - api
-    version: ">=0.18.0-0"
-  - alias: importer
-    condition: importer.enabled
-    name: hedera-mirror-importer
-    repository: file://../hedera-mirror-importer
-    version: ">=0.18.0-0"
-  - alias: monitor
-    condition: monitor.enabled
-    name: hedera-mirror-monitor
-    repository: file://../hedera-mirror-monitor
-    version: ">=0.18.0-0"
-  - alias: postgresql
-    condition: postgresql.enabled
-    name: postgresql-ha
-    repository: https://charts.bitnami.com/bitnami
-    version: 9.0.3
-  - condition: redis.enabled
-    name: redis
-    repository: https://charts.bitnami.com/bitnami
-    version: 16.8.9
-  - alias: rest
-    condition: rest.enabled
-    name: hedera-mirror-rest
-    repository: file://../hedera-mirror-rest
-    tags:
-      - api
-    version: ">=0.18.0-0"
-  - alias: rosetta
-    condition: rosetta.enabled
-    name: hedera-mirror-rosetta
-    repository: file://../hedera-mirror-rosetta
-    tags:
-      - api
-    version: ">=0.18.0-0"
-  - alias: timescaledb
-    condition: timescaledb.enabled
-    name: timescaledb-single
-    repository: https://raw.githubusercontent.com/timescale/timescaledb-kubernetes/master/charts/repo/
-    version: 0.11.0
-  - alias: web3
-    condition: web3.enabled
-    name: hedera-mirror-web3
-    repository: file://../hedera-mirror-web3
-    tags:
-      - api
-    version: ">=0.18.0-0"
+    - alias: grpc
+      condition: grpc.enabled
+      name: hedera-mirror-grpc
+      repository: file://../hedera-mirror-grpc
+      tags:
+          - api
+      version: ">=0.18.0-0"
+    - alias: importer
+      condition: importer.enabled
+      name: hedera-mirror-importer
+      repository: file://../hedera-mirror-importer
+      version: ">=0.18.0-0"
+    - alias: monitor
+      condition: monitor.enabled
+      name: hedera-mirror-monitor
+      repository: file://../hedera-mirror-monitor
+      version: ">=0.18.0-0"
+    - alias: postgresql
+      condition: postgresql.enabled
+      name: postgresql-ha
+      repository: https://charts.bitnami.com/bitnami
+      version: 9.0.3
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.8.9
+    - alias: rest
+      condition: rest.enabled
+      name: hedera-mirror-rest
+      repository: file://../hedera-mirror-rest
+      tags:
+          - api
+      version: ">=0.18.0-0"
+    - alias: rosetta
+      condition: rosetta.enabled
+      name: hedera-mirror-rosetta
+      repository: file://../hedera-mirror-rosetta
+      tags:
+          - api
+      version: ">=0.18.0-0"
+    - alias: timescaledb
+      condition: timescaledb.enabled
+      name: timescaledb-single
+      repository: https://raw.githubusercontent.com/timescale/timescaledb-kubernetes/master/charts/repo/
+      version: 0.11.0
+    - alias: web3
+      condition: web3.enabled
+      name: hedera-mirror-web3
+      repository: file://../hedera-mirror-web3
+      tags:
+          - api
+      version: ">=0.18.0-0"
 description: Hedera Mirror Node mirrors data from Hedera nodes and serves it via an API
 home: https://github.com/hashgraph/hedera-mirror-node
 icon: https://camo.githubusercontent.com/cca6b767847bb8ca5c7059481ba13a5fc81c5938/68747470733a2f2f7777772e6865646572612e636f6d2f6c6f676f2d6361706974616c2d686261722d776f72646d61726b2e6a7067
 keywords:
-  - blockchain
-  - dlt
-  - hedera
-  - hashgraph
-  - mirror
+    - blockchain
+    - dlt
+    - hedera
+    - hashgraph
+    - mirror
 maintainers:
-  - name: ewlghedera
-  - name: matheus-dallrosa
-  - name: Nana-EC
-  - name: steven-sheehy
-  - name: xin-hedera
+    - name: ewlghedera
+    - name: matheus-dallrosa
+    - name: Nana-EC
+    - name: steven-sheehy
+    - name: xin-hedera
 name: hedera-mirror
 sources:
-  - https://github.com/hashgraph/hedera-mirror-node
-version: 0.44.2
+    - https://github.com/hashgraph/hedera-mirror-node
+version: 0.45.0
