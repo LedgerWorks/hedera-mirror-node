@@ -178,54 +178,6 @@ class ContractUpdateTransactionHandlerTest extends AbstractTransactionHandlerTes
     }
 
     @Test
-    void updateTransactionStakedAccountId() {
-        AccountID accountId = AccountID.newBuilder().setAccountNum(1L).build();
-        RecordItem withStakedNodeIdSet = recordItemBuilder.contractUpdate()
-                .transactionBody(body -> body.clear().setStakedAccountId(accountId))
-                .build();
-        setupForContractUpdateTransactionTest(withStakedNodeIdSet, t -> assertThat(t)
-                .returns(1L, Contract::getStakedAccountId)
-                .returns(false, Contract::isDeclineReward)
-                .returns(-1L, Contract::getStakedNodeId)
-                .returns(Utility.getEpochDay(withStakedNodeIdSet.getConsensusTimestamp()),
-                        Contract::getStakePeriodStart)
-        );
-    }
-
-    @Test
-    void updateTransactionDeclineReward() {
-        RecordItemBuilder recordItemBuilder = new RecordItemBuilder();
-        RecordItem withDeclineValueSet = recordItemBuilder.contractUpdate()
-                .transactionBody(body -> body.setDeclineReward(BoolValue.of(false))
-                        .clearStakedAccountId()
-                        .clearStakedNodeId())
-                .build();
-        setupForContractUpdateTransactionTest(withDeclineValueSet, t -> assertThat(t)
-                .returns(false, Contract::isDeclineReward)
-                // since the contract is not being saved in the database,
-                // it does not have the default values of -1 for the staking fields.
-                .returns(null, Contract::getStakedNodeId)
-                .returns(null, Contract::getStakedAccountId)
-                .returns(Utility.getEpochDay(withDeclineValueSet.getConsensusTimestamp()),
-                        Contract::getStakePeriodStart)
-        );
-    }
-
-    @Test
-    void updateTransactionStakedNodeId() {
-        RecordItem withStakedNodeIdSet = recordItemBuilder.contractUpdate()
-                .transactionBody(body -> body.setStakedNodeId(1L))
-                .build();
-        setupForContractUpdateTransactionTest(withStakedNodeIdSet, t -> assertThat(t)
-                .returns(1L, Contract::getStakedNodeId)
-                .returns(-1L, Contract::getStakedAccountId)
-                .returns(true, Contract::isDeclineReward)
-                .returns(Utility.getEpochDay(withStakedNodeIdSet.getConsensusTimestamp()),
-                        Contract::getStakePeriodStart)
-        );
-    }
-
-    @Test
     void updateTransactionSuccessfulAutoRenewAccountAlias() {
         var alias = DomainUtils.fromBytes(domainBuilder.key());
         var recordItem = recordItemBuilder.contractUpdate()
