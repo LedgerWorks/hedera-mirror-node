@@ -70,6 +70,7 @@ const contractSelectFields = [
 const contractWithInitcodeSelectFields = [...contractSelectFields, Contract.getFullName(Contract.INITCODE)];
 
 const duplicateTransactionResult = TransactionResult.getProtoId('DUPLICATE_TRANSACTION');
+const wrongNonceTransactionResult = TransactionResult.getProtoId('WRONG_NONCE');
 
 /**
  * Extracts the sql where clause, params, order and limit values to be used from the provided contract query
@@ -233,7 +234,9 @@ const getContractByIdOrAddressQuery = ({timestampConditions, timestampParams, co
     params.push(...evmAddressParams);
     conditions.push(...evmAddressConditions);
   } else {
-    const encodedId = EntityId.parse(_.last(contractIdParam.split('.'))).getEncodedId();
+    // Passing the entire contract id instead of just the num part from shard.realm.num
+    // The contract ID string can be shard.realm.num, realm.num when shard=0 in application.yml or the encoded entity ID string.
+    const encodedId = EntityId.parse(contractIdParam).getEncodedId();
     params.push(encodedId);
     conditions.push(`${Contract.getFullName(Contract.ID)} = $${params.length}`);
   }
@@ -1003,7 +1006,11 @@ class ContractController extends BaseController {
     if (utils.isValidEthHash(transactionIdOrHash)) {
       const ethHash = Buffer.from(transactionIdOrHash.replace('0x', ''), 'hex');
       // get transactions using ethereum hash and nonce
-      transactions = await TransactionService.getTransactionDetailsFromEthHash(ethHash, duplicateTransactionResult);
+      transactions = await TransactionService.getTransactionDetailsFromEthHash(
+        ethHash,
+        [duplicateTransactionResult, wrongNonceTransactionResult],
+        1
+      );
     } else {
       const transactionId = TransactionId.fromString(transactionIdOrHash);
       const nonce = getLastNonceParamValue(req.query);
