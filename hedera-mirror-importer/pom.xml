@@ -60,6 +60,11 @@
             <version>${release.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.hedera</groupId>
+            <artifactId>hedera-mirror-protobuf</artifactId>
+            <version>${release.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.lmax</groupId>
             <artifactId>disruptor</artifactId>
             <version>${disruptor.version}</version>
@@ -176,6 +181,12 @@
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>netty-nio-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-resolver-dns-native-macos</artifactId>
+            <classifier>osx-aarch_64</classifier>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
