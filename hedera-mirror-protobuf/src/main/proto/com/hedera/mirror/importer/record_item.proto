@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package io.lworks.importer.protobuf;
+
+import "transaction_record.proto";
+import "transaction_body.proto";
+
+message RecordItem {
+    proto.TransactionRecord transactionRecord = 1;
+    proto.TransactionBody transactionBody = 2;
+    int64 consensusTimestamp = 3;
+}
