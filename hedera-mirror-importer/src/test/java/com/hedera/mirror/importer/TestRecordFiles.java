@@ -9,9 +9,9 @@ package com.hedera.mirror.importer;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,20 +24,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import com.hedera.mirror.common.domain.entity.EntityType;
-
 import lombok.experimental.UtilityClass;
 
 import com.hedera.mirror.common.domain.DigestAlgorithm;
 import com.hedera.mirror.common.domain.entity.EntityId;
+import com.hedera.mirror.common.domain.entity.EntityType;
 import com.hedera.mirror.common.domain.transaction.RecordFile;
 
 @UtilityClass
 public class TestRecordFiles {
 
     public Map<String, RecordFile> getAll() {
-        DigestAlgorithm digestAlgorithm = DigestAlgorithm.SHA384;
+        DigestAlgorithm digestAlgorithm = DigestAlgorithm.SHA_384;
 
         RecordFile recordFileV1_1 = RecordFile.builder()
                 .consensusStart(1561990380317763000L)
@@ -50,6 +48,7 @@ public class TestRecordFiles {
                 .name("2019-07-01T14_13_00.317763Z.rcd")
                 .previousHash(
                         "f423447a3d5a531a07426070e511555283daae063706242590949116f717a0524e4dd18f9d64e66c73982d475401db04")
+                .size(4898)
                 .version(1)
                 .build();
         RecordFile recordFileV1_2 = RecordFile.builder()
@@ -62,6 +61,7 @@ public class TestRecordFiles {
                 .hash("1faf198f8fdbefa59bde191f214d73acdc4f5c0f434677a7edf9591b129e21aea90a5b3119d2802cee522e7be6bc8830")
                 .name("2019-07-01T14_29_00.302068Z.rcd")
                 .previousHash(recordFileV1_1.getFileHash())
+                .size(22347)
                 .version(1)
                 .build();
         RecordFile recordFileV2_1 = RecordFile.builder()
@@ -74,6 +74,7 @@ public class TestRecordFiles {
                 .hash("591558e059bd1629ee386c4e35a6875b4c67a096718f5d225772a651042715189414df7db5588495efb2a85dc4a0ffda")
                 .name("2019-08-30T18_10_00.419072Z.rcd")
                 .previousHash(digestAlgorithm.getEmptyHash())
+                .size(8515)
                 .version(2)
                 .build();
         RecordFile recordFileV2_2 = RecordFile.builder()
@@ -86,6 +87,7 @@ public class TestRecordFiles {
                 .hash("5ed51baeff204eb6a2a68b76bbaadcb9b6e7074676c1746b99681d075bef009e8d57699baaa6342feec4e83726582d36")
                 .name("2019-08-30T18_10_05.249678Z.rcd")
                 .previousHash(recordFileV2_1.getFileHash())
+                .size(6649)
                 .version(2)
                 .build();
         RecordFile recordFileV5_1 = RecordFile.builder()
@@ -103,6 +105,7 @@ public class TestRecordFiles {
                         "ffe56840b99145f7b3370367fa5784cbe225278afd1c4c078dfe5b950fee22e2b9e9a04bde32023c3ba07c057cb54406")
                 .name("2021-01-11T22_09_24.063739000Z.rcd")
                 .previousHash(digestAlgorithm.getEmptyHash())
+                .size(498)
                 .version(5)
                 .build();
         RecordFile recordFileV5_2 = RecordFile.builder()
@@ -120,11 +123,53 @@ public class TestRecordFiles {
                         "912869b5204ffbb7e437aaa6e7a09e9d53da98ead27942fdf7017e850827e857fadb1167e8877cfb8175883adcd74f7d")
                 .name("2021-01-11T22_09_34.097416003Z.rcd")
                 .previousHash(recordFileV5_1.getHash())
+                .size(498)
                 .version(5)
                 .build();
+        RecordFile recordFileV6_1 = RecordFile.builder()
+                .consensusStart(1655802944212575003L)
+                .consensusEnd(1655802944212575003L)
+                .count(1L)
+                .digestAlgorithm(digestAlgorithm)
+                .fileHash(
+                        "459884c41241650e739c194c2120996dcc2aff35ea8e7b3a770929089b89c31583ae9ff383b80561f211b4fc4f6a0a9b")
+                .hapiVersionMajor(0)
+                .hapiVersionMinor(27)
+                .hapiVersionPatch(1)
+                .hash("099224968b8a38e88bb5bb82d626e1f2835415b4ebbdc0bd6e695505944ed533159c9e66414887f58da34921cf4178a3")
+                .index(-9223372036854775796L)
+                .metadataHash(
+                        "884757419c733027557616cb0191c59fa13805fbc0500daaddc84c99692924df9ba7419e2391be02da4d1de42255deae")
+                .name("2022-06-21T09_15_44.212575003Z.rcd.gz")
+                .previousHash(
+                        "502ca907a14af743a441a4f7d0de2664174b931ae0c4cae978712d44b9790123b4ac6cba6a273151703129b22f2d95f2")
+                .size(1223)
+                .version(6)
+                .build();
+        RecordFile recordFileV6_2 = RecordFile.builder()
+                .consensusStart(1655802946247764003L)
+                .consensusEnd(1655802946247764003L)
+                .count(1L)
+                .digestAlgorithm(digestAlgorithm)
+                .fileHash(
+                        "7cdb75a5631c67d03b0bf8e10d5de91e054d1941cf50746fea328c42c50279f4eadd7b3d9c159de4f9a9da288cc1142f")
+                .hapiVersionMajor(0)
+                .hapiVersionMinor(27)
+                .hapiVersionPatch(1)
+                .hash("f43343b6bbbc226282b250eff72b72d2eed605921e83263a9558ff72f18aa6113faae71f3d83308756b597dc26b9d8a0")
+                .index(-9223372036854775795L)
+                .metadataHash(
+                        "d3959bfcfeb0a6933995f58440f374fd300ba06372a6ff6d6226e8cf8afa02d529df52bd162c3c1a40c86d43b6322eea")
+                .name("2022-06-21T09_15_46.247764003Z.rcd.gz")
+                .previousHash(recordFileV6_1.getHash())
+                .size(791)
+                .version(6)
+                .build();
+
         List<RecordFile> allFiles = List.of(recordFileV1_1, recordFileV1_2,
                 recordFileV2_1, recordFileV2_2,
-                recordFileV5_1, recordFileV5_2);
+                recordFileV5_1, recordFileV5_2,
+                recordFileV6_1, recordFileV6_2);
         return Collections.unmodifiableMap(allFiles.stream().collect(Collectors.toMap(RecordFile::getName, rf -> rf)));
     }
 
@@ -134,7 +179,7 @@ public class TestRecordFiles {
                 .consensusStart(1611188151568507001L)
                 .consensusEnd(1611188151568507001L)
                 .count(1L)
-                .digestAlgorithm(DigestAlgorithm.SHA384)
+                .digestAlgorithm(DigestAlgorithm.SHA_384)
                 .fileHash(
                         "e7d9e71efd239bde3adcad8eb0571c38f91f77ae76a4af69bb44f19b2785ad3594ac1d265351a592ab14301da9bb1950")
                 .hash("e7d9e71efd239bde3adcad8eb0571c38f91f77ae76a4af69bb44f19b2785ad3594ac1d265351a592ab14301da9bb1950")
@@ -142,13 +187,14 @@ public class TestRecordFiles {
                 .nodeAccountId(nodeAccountId)
                 .previousHash(
                         "d27ba83c736bfa2ffc9a6f062b27ea4856800bbbe820b77b32e08faf3d7475d81ef5a16f90ce065d35eefa999677edaa")
+                .size(389)
                 .version(2)
                 .build();
         RecordFile recordFileV5 = RecordFile.builder()
                 .consensusStart(1611188383558496000L)
                 .consensusEnd(1611188383558496000L)
                 .count(1L)
-                .digestAlgorithm(DigestAlgorithm.SHA384)
+                .digestAlgorithm(DigestAlgorithm.SHA_384)
                 .fileHash(
                         "42717bae0e538bac34563784b08b5a5b50a9964c9435452c93134bf13355c9778a1c64cfdc30f33fe52dd7f76dbdda70")
                 .hapiVersionMajor(0)
@@ -160,8 +206,31 @@ public class TestRecordFiles {
                 .name("2021-01-21T00_19_43.558496000Z.rcd")
                 .nodeAccountId(nodeAccountId)
                 .previousHash(recordFileV2.getHash())
+                .size(495)
                 .version(5)
                 .build();
         return List.of(recordFileV2, recordFileV5);
+    }
+
+    public List<RecordFile> getV5V6Files() {
+        EntityId nodeAccountId = EntityId.of(0, 0, 3, EntityType.ACCOUNT);
+        RecordFile recordFileV5 = RecordFile.builder()
+                .nodeAccountId(nodeAccountId)
+                .name("2022-06-21T09_14_34.364804003Z.rcd")
+                .digestAlgorithm(DigestAlgorithm.SHA_384)
+                .size(492)
+                .version(5)
+                .build();
+
+        RecordFile recordFileV6 = RecordFile.builder()
+                .name("2022-06-21T09_15_38.325469003Z.rcd.gz")
+                .nodeAccountId(nodeAccountId)
+                .digestAlgorithm(DigestAlgorithm.SHA_384)
+                .index(-9223372036854775797L)
+                .size(788)
+                .version(6)
+                .build();
+
+        return List.of(recordFileV5, recordFileV6);
     }
 }

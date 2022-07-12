@@ -42,6 +42,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import com.hedera.mirror.common.domain.contract.Contract;
 import com.hedera.mirror.common.domain.entity.EntityId;
@@ -123,6 +124,56 @@ class ContractUpdateTransactionHandlerTest extends AbstractTransactionHandlerTes
                 .satisfies(c -> assertThat(c.getMemo()).isNotEmpty())
                 .satisfies(c -> assertThat(c.getPublicKey()).isNotEmpty())
                 .satisfies(c -> assertThat(c.getProxyAccountId().getId()).isPositive())
+        );
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = {0, 100})
+    void updateTransactionStakedAccountId(long accountNum) {
+        // Note, the sentinel value '0.0.0' clears the staked account id, in importer, we persist the encoded id '0' to
+        // db to indicate there is no staked account id
+        AccountID accountId = AccountID.newBuilder().setAccountNum(accountNum).build();
+        RecordItem withStakedNodeIdSet = recordItemBuilder.contractUpdate()
+                .transactionBody(body -> body.clear().setStakedAccountId(accountId))
+                .build();
+        setupForContractUpdateTransactionTest(withStakedNodeIdSet, t -> assertThat(t)
+                .returns(accountNum, Contract::getStakedAccountId)
+                .returns(null, Contract::getDeclineReward)
+                .returns(-1L, Contract::getStakedNodeId)
+                .returns(Utility.getEpochDay(withStakedNodeIdSet.getConsensusTimestamp()), Contract::getStakePeriodStart)
+        );
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void updateTransactionDeclineReward(Boolean declineReward) {
+        RecordItemBuilder recordItemBuilder = new RecordItemBuilder();
+        RecordItem withDeclineValueSet = recordItemBuilder.contractUpdate()
+                .transactionBody(body -> body.setDeclineReward(BoolValue.of(declineReward))
+                        .clearStakedAccountId()
+                        .clearStakedNodeId())
+                .build();
+        setupForContractUpdateTransactionTest(withDeclineValueSet, t -> assertThat(t)
+                .returns(declineReward, Contract::getDeclineReward)
+                // since the contract is not being saved in the database,
+                // it does not have the default values of -1 for the staking fields.
+                .returns(null, Contract::getStakedNodeId)
+                .returns(null, Contract::getStakedAccountId)
+                .returns(Utility.getEpochDay(withDeclineValueSet.getConsensusTimestamp()), Contract::getStakePeriodStart)
+        );
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = {1, -1})
+    void updateTransactionStakedNodeId(Long nodeId) {
+        RecordItem withStakedNodeIdSet = recordItemBuilder.contractUpdate()
+                .transactionBody(body -> body.setStakedNodeId(nodeId))
+                .build();
+        setupForContractUpdateTransactionTest(withStakedNodeIdSet, t -> assertThat(t)
+                .returns(nodeId, Contract::getStakedNodeId)
+                .returns(0L, Contract::getStakedAccountId)
+                .returns(true, Contract::getDeclineReward)
+                .returns(Utility.getEpochDay(withStakedNodeIdSet.getConsensusTimestamp()), Contract::getStakePeriodStart)
         );
     }
 

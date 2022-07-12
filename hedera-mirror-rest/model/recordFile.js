@@ -50,9 +50,11 @@ class RecordFile {
   static HASH = 'hash';
   static LOAD_END = 'load_end';
   static LOAD_START = 'load_start';
+  static LOGS_BLOOM = 'logs_bloom';
   static NAME = 'name';
   static NODE_ACCOUNT_ID = 'node_account_id';
   static PREV_HASH = 'prev_hash';
+  static SIZE = 'size';
   static VERSION = 'version';
   static LOGS_BLOOM = 'logs_bloom';
 

@@ -103,7 +103,7 @@ create table if not exists contract
     public_key                       character varying              null,
     realm                            bigint                         not null,
     shard                            bigint                         not null,
-    staked_account_id                bigint      default -1         null,
+    staked_account_id                bigint                         null,
     staked_node_id                   bigint      default -1         null,
     stake_period_start               bigint      default -1         null,
     timestamp_range                  int8range                      not null,
@@ -232,7 +232,7 @@ create table if not exists entity
     realm                            bigint                not null,
     receiver_sig_required            boolean               null,
     shard                            bigint                not null,
-    staked_account_id                bigint  default -1    null,
+    staked_account_id                bigint                null,
     staked_node_id                   bigint  default -1    null,
     stake_period_start               bigint  default -1    null,
     submit_key                       bytea                 null,
@@ -357,9 +357,12 @@ create table if not exists node_stake
 (
     consensus_timestamp bigint not null,
     epoch_day           bigint not null,
+    max_stake           bigint not null,
+    min_stake           bigint not null,
     node_id             bigint not null,
     reward_rate         bigint not null,
     stake               bigint not null,
+    stake_not_rewarded  bigint not null,
     stake_rewarded      bigint not null,
     stake_total         bigint not null,
     staking_period      bigint not null
@@ -398,6 +401,7 @@ create table if not exists record_file
     name               character varying(250) not null,
     node_account_id    bigint                 not null,
     prev_hash          character varying(96)  not null,
+    size               int                    null,
     version            int                    not null
 );
 comment on table record_file is 'Network record file stream entries';
