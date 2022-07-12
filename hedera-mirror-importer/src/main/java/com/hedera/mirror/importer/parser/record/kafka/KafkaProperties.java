@@ -1,4 +1,4 @@
-package com.hedera.mirror.importer.parser.record.entity.kafka;
+package com.hedera.mirror.importer.parser.record.kafka;
 
 /*-
  * ‌
@@ -20,15 +20,14 @@ package com.hedera.mirror.importer.parser.record.entity.kafka;
  * ‍
  */
 
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import lombok.Data;
-
 @Data
-@ConfigurationProperties("hedera.mirror.importer.parser.record.entity.kafka")
+@ConfigurationProperties("hedera.mirror.importer.parser.record.kafka")
 public class KafkaProperties {
 
-    private boolean enabled = true;
+    private boolean enabled = false;
 
     private String bootstrapServers = "";
 
@@ -36,6 +35,5 @@ public class KafkaProperties {
 
     private String producerApiKeySecret = "";
 
-    private String transactionsTopic = "";
-
+    private String recordItemsTopic = "";
 }
