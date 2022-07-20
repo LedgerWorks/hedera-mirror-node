@@ -9,5 +9,5 @@ directory and run `docker compose -f kafka.docker-compose.yml up`.
 2. Start up a Postgres database for the importer. To do that, you can use the Docker compose file at the root
 of this repository: `docker compose up db`.
 3. Start up the importer using the `local-kafka` Spring profile. To do that, you can run this command
-from the root of this repository: `mvn spring-boot:run -pl hedera-mirror-importer`
+from the root of this repository: `mvn spring-boot:run -Dspring-boot.run.profiles=local-kafka -pl hedera-mirror-importer`
 4. Records should now be sent from the importer to the local Kafka topic named `hedera-record-items`.
