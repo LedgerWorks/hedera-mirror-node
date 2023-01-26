@@ -15,8 +15,8 @@ verify_remote_configuration() {
     echo "Verify git remote config"
     git remote -v | grep "hedera\tgit@github.com:hashgraph/hedera-mirror-node.git (fetch)" >/dev/null || fail_with "git remote hedera should point to git@github.com:hashgraph/hedera-mirror-node.git"
     git remote -v | grep "hedera\tgit@github.com:hashgraph/hedera-mirror-node.git (push)" >/dev/null || fail_with "git remote hedera should point to git@github.com:hashgraph/hedera-mirror-node.git"
-    git remote -v | grep "origin\tgit@lw-github:LedgerWorks/hedera-mirror-node.git (fetch)" >/dev/null || fail_with "git remote origin should point to git@lw-github:LedgerWorks/hedera-mirror-node.git"
-    git remote -v | grep "origin\tgit@lw-github:LedgerWorks/hedera-mirror-node.git (push)" >/dev/null || fail_with "git remote origin should point to git@lw-github:LedgerWorks/hedera-mirror-node.git"
+    git remote -v | grep -E "origin\s+git@.*github(\.com)?:LedgerWorks/hedera-mirror-node.git \(fetch\)" >/dev/null || fail_with "git remote origin should point to git@.*github(\.com)?:LedgerWorks/hedera-mirror-node.git"
+    git remote -v | grep -E "origin\s+git@.*github(\.com)?:LedgerWorks/hedera-mirror-node.git \(push\)" >/dev/null || fail_with "git remote origin should point to git@.*github(\.com)?:LedgerWorks/hedera-mirror-node.git"
 }
 
 verify_tag_exists() {
