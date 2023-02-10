@@ -70,6 +70,11 @@ dependencies {
     testImplementation("org.awaitility:awaitility")
     testImplementation("org.gaul:s3proxy")
     testImplementation("org.testcontainers:junit-jupiter")
+
+
+    implementation(project(":protobuf"))
+    implementation("org.apache.kafka:kafka-clients")
+    implementation("org.springframework.kafka:spring-kafka")
 }
 
 tasks.assemble {
