@@ -1,10 +1,10 @@
-package com.hedera.mirror.importer.parser.record;
+package com.hedera.mirror.importer.parser.record.kafka;
 
 /*-
  * ‌
  * Hedera Mirror Node
  * ​
- * Copyright (C) 2019 - 2023 Hedera Hashgraph, LLC
+ * Copyright (C) 2019 - 2022 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,14 @@ package com.hedera.mirror.importer.parser.record;
  * ‍
  */
 
-import com.hedera.mirror.importer.parser.StreamItemListener;
-import com.hedera.mirror.common.domain.transaction.RecordItem;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public interface RecordItemListener extends StreamItemListener<RecordItem> { }
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.METHOD})
+@ConditionalOnProperty(name = "hedera.mirror.importer.parser.record.kafka.enabled", havingValue = "true")
+public @interface ConditionalOnKafkaRecordParser {
+}
