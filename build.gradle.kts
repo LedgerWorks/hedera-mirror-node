@@ -94,7 +94,7 @@ dependencies {
         api("org.testcontainers:junit-jupiter:1.17.6")
         api("software.amazon.awssdk:bom:2.20.27")
         api("uk.org.webcompere:system-stubs-jupiter:2.0.2")
-        api("org.apache.kafka:kafka-clients:3.2.0")
+        api("org.apache.kafka:kafka-clients:3.4.0")
         api("org.springframework.kafka:spring-kafka:2.8.6")
     }
 }
