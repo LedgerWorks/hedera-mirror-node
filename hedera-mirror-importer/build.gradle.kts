@@ -67,4 +67,6 @@ dependencies {
     testImplementation("org.gaul:s3proxy")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.testcontainers:postgresql")
+    implementation("org.apache.kafka:kafka-clients")
+    implementation("org.springframework.kafka:spring-kafka")
 }
