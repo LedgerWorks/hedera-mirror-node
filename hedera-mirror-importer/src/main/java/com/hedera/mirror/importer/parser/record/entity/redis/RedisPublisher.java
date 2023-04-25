@@ -121,3 +121,4 @@ public class RedisPublisher implements BatchPublisher {
         return String.format(TOPIC_FORMAT, id);
     }
 }
+
