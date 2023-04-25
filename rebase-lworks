@@ -1,0 +1,76 @@
+#!/bin/bash
+
+set -e
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m'
+
+fail_with() {
+    printf "${RED}${1}${NC}\n"
+    exit 1
+}
+
+verify_remote_configuration() {
+    echo "Verify git remote config"
+    git remote -v | grep "hedera\tgit@github.com:hashgraph/hedera-mirror-node.git (fetch)" >/dev/null || fail_with "git remote hedera should point to git@github.com:hashgraph/hedera-mirror-node.git"
+    git remote -v | grep "hedera\tgit@github.com:hashgraph/hedera-mirror-node.git (push)" >/dev/null || fail_with "git remote hedera should point to git@github.com:hashgraph/hedera-mirror-node.git"
+    git remote -v | grep -E "origin\s+git@.*github(\.com)?:LedgerWorks/hedera-mirror-node.git \(fetch\)" >/dev/null || fail_with "git remote origin should point to git@.*github(\.com)?:LedgerWorks/hedera-mirror-node.git"
+    git remote -v | grep -E "origin\s+git@.*github(\.com)?:LedgerWorks/hedera-mirror-node.git \(push\)" >/dev/null || fail_with "git remote origin should point to git@.*github(\.com)?:LedgerWorks/hedera-mirror-node.git"
+}
+
+verify_tag_exists() {
+    echo "Verifying hedera tag: $1"
+    git rev-list $1.. >/dev/null || fail_with "Tag $1 not found on hedera remote"
+}
+
+verify_remote_configuration
+git fetch --all --tags
+
+export CI=true # Skip spotless formatting
+
+hedera_semantic_version=$(sed 's/^v//' <<<"$1")
+hedera_version="v${hedera_semantic_version}"
+verify_tag_exists "$hedera_version"
+lworks_version="lworks-$hedera_version"
+
+if [[ "$(git branch --show-current)" != "$lworks_version" ]]; then
+  echo "Checking out hedera $hedera_version"
+  git checkout "$hedera_version"
+
+  echo "Creating branch $lworks_version"
+  git checkout -b "$lworks_version"
+
+  echo "Cherry pick squash commit from main"
+  git cherry-pick origin/main
+fi
+
+echo "Pushing $lworks_version"
+git push --set-upstream origin "refs/heads/$lworks_version"
+
+
+echo "Tagging $lworks_version"
+if git rev-parse -q --verify "refs/tags/$lworks_version" >/dev/null; then
+  echo "Tag $lworks_version already exists"
+else
+  git tag "$lworks_version"
+  git push origin "refs/tags/$lworks_version"
+fi
+
+echo "Resetting origin/main to $lworks_version"
+git checkout main
+git reset --hard "$lworks_version"
+
+echo "Done. Note: manual steps required."
+
+printf "${GREEN}Manual steps required on main\!"
+printf "\n  1. Verify actions taken"
+printf "\n  2. git push --force${NC}\n"
+
+
+
+
+
+
+
+
