@@ -107,6 +107,8 @@ dependencies {
         api("uk.org.webcompere:system-stubs-jupiter:2.1.7")
         api("org.web3j:core:4.12.2")
         api("tech.pegasys:jc-kzg-4844:1.0.0")
+        api("org.apache.kafka:kafka-clients:3.2.0")
+        api("org.springframework.kafka:spring-kafka:2.8.6")
     }
 }
 
