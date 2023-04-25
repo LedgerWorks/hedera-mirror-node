@@ -43,7 +43,7 @@ import org.springframework.jdbc.core.PreparedStatementCallback;
 @ConditionOnEntityRecordParser
 @CustomLog
 @Named
-@Order(2)
+@Order(3)
 @RequiredArgsConstructor
 public class NotifyingEntityListener implements BatchEntityListener {
 
