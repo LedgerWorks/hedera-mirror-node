@@ -26,27 +26,58 @@ import com.hederahashgraph.api.proto.java.TransactionRecord;
 import io.lworks.importer.protobuf.RecordItemOuterClass;
 import jakarta.inject.Named;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.CustomLog;
 import org.springframework.core.annotation.Order;
 import org.springframework.kafka.core.KafkaTemplate;
 
-@Log4j2
+@CustomLog
 @Named
 @RequiredArgsConstructor
 @ConditionalOnKafkaRecordParser
 @Order(0)
 public class KafkaRecordItemListener implements RecordItemListener {
 
+  private final CommonParserProperties commonParserProperties;
   private final KafkaProperties kafkaProperties;
   private final KafkaTemplate<String, byte[]> kafkaTemplate;
+  private final TransactionHandlerFactory transactionHandlerFactory;
 
   @Override
   public void onItem(RecordItem recordItem) throws ImporterException {
     TransactionBody body = recordItem.getTransactionBody();
     TransactionRecord txRecord = recordItem.getTransactionRecord();
-    log.trace("Storing transaction body: {}", () -> Utility.printProtoMessage(body));
+
+    int transactionTypeValue = recordItem.getTransactionType();
+    TransactionType transactionType = TransactionType.of(transactionTypeValue);
+    TransactionHandler transactionHandler = transactionHandlerFactory.get(transactionType);
+
     long consensusTimestamp = DomainUtils.timeStampInNanos(txRecord.getConsensusTimestamp());
 
+    EntityId entityId;
+    try {
+        entityId = transactionHandler.getEntity(recordItem);
+    } catch (InvalidEntityException e) { // transaction can have invalid topic/contract/file id
+        log.error(
+                RECOVERABLE_ERROR + "Invalid entity encountered for consensusTimestamp {} : {}",
+                consensusTimestamp,
+                e.getMessage());
+        entityId = EntityId.EMPTY;
+    }
+
+    // to:do - exclude Freeze from Filter transaction type
+    TransactionFilterFields transactionFilterFields = getTransactionFilterFields(entityId, recordItem);
+    Collection<EntityId> entities = transactionFilterFields.getEntities();
+    log.debug("Processing {} transaction {} for entities {}", transactionType, consensusTimestamp, entities);
+    if (!commonParserProperties.getFilter().test(transactionFilterFields)) {
+        log.debug(
+                "Ignoring transaction. consensusTimestamp={}, transactionType={}, entities={}",
+                consensusTimestamp,
+                transactionType,
+                entities);
+        return;
+    }
+
+    log.trace("Storing transaction body: {}", () -> Utility.printProtoMessage(body));
     String key = String.valueOf(txRecord.getTransactionID().getAccountID().getAccountNum());
 
     io.lworks.importer.protobuf.RecordItemOuterClass.RecordItem kafkaRecordItem = buildRecordItem(consensusTimestamp,
