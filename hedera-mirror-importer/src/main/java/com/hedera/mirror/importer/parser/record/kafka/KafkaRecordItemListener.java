@@ -16,21 +16,32 @@
 
 package com.hedera.mirror.importer.parser.record.kafka;
 
+import com.hedera.mirror.common.domain.entity.EntityId;
 import com.hedera.mirror.common.domain.transaction.RecordItem;
+import com.hedera.mirror.common.domain.transaction.TransactionType;
+import com.hedera.mirror.common.exception.InvalidEntityException;
 import com.hedera.mirror.common.util.DomainUtils;
+import com.hedera.mirror.importer.domain.TransactionFilterFields;
 import com.hedera.mirror.importer.exception.ImporterException;
+import com.hedera.mirror.importer.parser.CommonParserProperties;
 import com.hedera.mirror.importer.parser.record.RecordItemListener;
+import com.hedera.mirror.importer.parser.record.transactionhandler.TransactionHandler;
+import com.hedera.mirror.importer.parser.record.transactionhandler.TransactionHandlerFactory;
 import com.hedera.mirror.importer.util.Utility;
 import com.hederahashgraph.api.proto.java.TransactionBody;
 import com.hederahashgraph.api.proto.java.TransactionRecord;
 import io.lworks.importer.protobuf.RecordItemOuterClass;
 import jakarta.inject.Named;
 import lombok.RequiredArgsConstructor;
-import lombok.CustomLog;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.core.annotation.Order;
 import org.springframework.kafka.core.KafkaTemplate;
 
-@CustomLog
+import java.util.Collection;
+import java.util.HashSet;
+
+import static com.hedera.mirror.importer.util.Utility.RECOVERABLE_ERROR;
+@Log4j2
 @Named
 @RequiredArgsConstructor
 @ConditionalOnKafkaRecordParser
@@ -95,4 +106,36 @@ public class KafkaRecordItemListener implements RecordItemListener {
         .setTransactionBody(transactionBody)
         .build();
   }
+
+   // regardless of transaction type, filter on entityId and payer account and transfer tokens/receivers/senders
+    private TransactionFilterFields getTransactionFilterFields(EntityId entityId, RecordItem recordItem) {
+        if (!commonParserProperties.hasFilter()) {
+            return TransactionFilterFields.EMPTY;
+        }
+
+        var entities = new HashSet<EntityId>();
+        entities.add(entityId);
+        entities.add(recordItem.getPayerAccountId());
+
+        recordItem
+                .getTransactionRecord()
+                .getTransferList()
+                .getAccountAmountsList()
+                .forEach(accountAmount -> entities.add(EntityId.of(accountAmount.getAccountID())));
+
+        recordItem.getTransactionRecord().getTokenTransferListsList().forEach(transfer -> {
+            entities.add(EntityId.of(transfer.getToken()));
+
+            transfer.getTransfersList()
+                    .forEach(accountAmount -> entities.add(EntityId.of(accountAmount.getAccountID())));
+
+            transfer.getNftTransfersList().forEach(nftTransfer -> {
+                entities.add(EntityId.of(nftTransfer.getReceiverAccountID()));
+                entities.add(EntityId.of(nftTransfer.getSenderAccountID()));
+            });
+        });
+
+        entities.remove(null);
+        return new TransactionFilterFields(entities, TransactionType.of(recordItem.getTransactionType()));
+    }
 }
