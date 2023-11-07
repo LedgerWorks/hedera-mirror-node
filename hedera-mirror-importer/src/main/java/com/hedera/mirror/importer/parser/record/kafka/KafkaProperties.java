@@ -16,8 +16,14 @@
 
 package com.hedera.mirror.importer.parser.record.kafka;
 
+import com.google.api.client.util.Sets;
+import com.google.common.collect.ImmutableSet;
 import lombok.Data;
+import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @ConfigurationProperties("hedera.mirror.importer.parser.record.kafka")
@@ -32,4 +38,13 @@ public class KafkaProperties {
     private String producerApiKeySecret = "";
 
     private String recordItemsTopic = "";
+
+    private String ignorePayers = "";
+
+    @Getter(lazy = true)
+    private final Set<String> ignoredPayersSet = ignoredPayersSet();
+
+    private Set<String> ignoredPayersSet() {
+        return ImmutableSet.copyOf(ignorePayers.split(","));
+    }
 }
