@@ -18,9 +18,11 @@ package com.hedera.mirror.importer.parser.record.kafka;
 
 import com.hedera.mirror.common.domain.transaction.RecordItem;
 import com.hedera.mirror.common.util.DomainUtils;
+import com.hedera.mirror.importer.MirrorProperties;
 import com.hedera.mirror.importer.exception.ImporterException;
 import com.hedera.mirror.importer.parser.record.RecordItemListener;
 import com.hedera.mirror.importer.util.Utility;
+import com.hederahashgraph.api.proto.java.AccountID;
 import com.hederahashgraph.api.proto.java.TransactionBody;
 import com.hederahashgraph.api.proto.java.TransactionRecord;
 import io.lworks.importer.protobuf.RecordItemOuterClass;
@@ -46,6 +48,15 @@ public class KafkaRecordItemListener implements RecordItemListener {
     TransactionRecord txRecord = recordItem.getTransactionRecord();
     log.trace("Storing transaction body: {}", () -> Utility.printProtoMessage(body));
     long consensusTimestamp = DomainUtils.timeStampInNanos(txRecord.getConsensusTimestamp());
+
+    String payerAccountId = recordItem.getPayerAccountId().toString();
+    if (kafkaProperties.getIgnoredPayersSet().contains(payerAccountId)) {
+      log.debug(
+          "Ignoring transaction. consensusTimestamp={}, payerAccountId={}",
+          consensusTimestamp,
+          payerAccountId);
+      return;
+    }
 
     String key = String.valueOf(txRecord.getTransactionID().getAccountID().getAccountNum());
 
