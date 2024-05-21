@@ -94,7 +94,7 @@ jobs:
           go-version: 1.22
 
       - name: Run Gosec Security Scanner
-        uses: securego/gosec@3b23ec8f0902ac0438a16fb2e5032202853e7122 # master
+        uses: securego/gosec@b633c4c0ec489dfc2f4930bb96237371058cb199 # master
         with:
           args: ./...
 
