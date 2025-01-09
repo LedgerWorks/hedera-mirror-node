@@ -52,9 +52,13 @@ public class KafkaRecordItemListener implements RecordItemListener {
     String payerAccountId = recordItem.getPayerAccountId().toString();
     if (kafkaProperties.getIgnoredPayersSet().contains(payerAccountId)) {
       log.debug(
-          "Ignoring transaction. consensusTimestamp={}, payerAccountId={}",
-          consensusTimestamp,
-          payerAccountId);
+        "Ignoring transaction. consensusTimestamp={}, payerAccountId={}",
+        consensusTimestamp,
+        payerAccountId);
+      return;
+    }
+
+    if(!(body.hasContractCall() || body.hasEthereumTransaction())) {
       return;
     }
 
