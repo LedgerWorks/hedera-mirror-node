@@ -17,6 +17,7 @@
 package com.hedera.mirror.importer.parser.record.kafka;
 
 import com.hedera.mirror.common.domain.transaction.RecordItem;
+import com.hedera.mirror.common.domain.transaction.Transaction;
 import com.hedera.mirror.common.util.DomainUtils;
 import com.hedera.mirror.importer.ImporterProperties;
 import com.hedera.mirror.importer.exception.ImporterException;
@@ -42,6 +43,10 @@ public class KafkaRecordItemListener implements RecordItemListener {
   private final KafkaProperties kafkaProperties;
   private final KafkaTemplate<String, byte[]> kafkaTemplate;
 
+  private boolean isContractCallRelated(TransactionBody body, TransactionRecord txRecord) {
+    return body.hasContractCall() || body.hasEthereumTransaction() || txRecord.hasContractCallResult() || txRecord.hasContractCreateResult() || body.hasContractCreateInstance() || body.hasContractDeleteInstance() || body.hasContractUpdateInstance();
+  }
+
   @Override
   public void onItem(RecordItem recordItem) throws ImporterException {
     TransactionBody body = recordItem.getTransactionBody();
@@ -52,9 +57,17 @@ public class KafkaRecordItemListener implements RecordItemListener {
     String payerAccountId = recordItem.getPayerAccountId().toString();
     if (kafkaProperties.getIgnoredPayersSet().contains(payerAccountId)) {
       log.debug(
-          "Ignoring transaction. consensusTimestamp={}, payerAccountId={}",
-          consensusTimestamp,
-          payerAccountId);
+        "Ignoring transaction based on payer. consensusTimestamp={}, payerAccountId={}",
+        consensusTimestamp,
+        payerAccountId);
+      return;
+    }
+
+    if(!isContractCallRelated(body, txRecord)) {
+       log.debug(
+        "Ignoring non contract call transaction. consensusTimestamp={}, payerAccountId={}",
+        consensusTimestamp,
+        payerAccountId);
       return;
     }
 
