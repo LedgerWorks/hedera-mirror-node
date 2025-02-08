@@ -164,3 +164,6 @@ hedera-mirror-rest/monitoring/config/serverlist.json
 report-*.csv
 
 hedera-mirror-web3/src/testHistorical/solidity/openzeppelin
+
+# Data from running locally
+.localdata/

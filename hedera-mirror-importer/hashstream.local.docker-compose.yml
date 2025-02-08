@@ -1,0 +1,54 @@
+# This stack can be run to test out the HashStream fork locally
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      PGDATA: /var/lib/postgresql/data
+      POSTGRES_HOST_AUTH_METHOD: scram-sha-256
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+      POSTGRES_PASSWORD: postgres_password
+    ports:
+      - 5432:5432
+    restart: unless-stopped
+    stop_grace_period: 2m
+    stop_signal: SIGTERM
+    tty: true
+    volumes:
+      - ./.localdata/db:/var/lib/postgresql/data
+      - ./src/main/resources/db/scripts/init.sh:/docker-entrypoint-initdb.d/init.sh
+    networks:
+      - hashstream-local
+  localstack:
+    container_name: "${LOCALSTACK_DOCKER_NAME-localstack}"
+    image: localstack/localstack:3.6.0
+    ports:
+      - "4566:4566" # LocalStack Gateway
+      - "4510-4559:4510-4559" # external services port range
+    environment:
+      - DEBUG=${DEBUG-}
+      - PERSISTENCE=${PERSISTENCE-}
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "./.localdata/localstack:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - hashstream-local
+  localstack-bootstrap:
+    depends_on:
+      - localstack
+    image: amazon/aws-cli:latest
+    working_dir: /bootstrap
+    env_file:
+      - ./local-testing/localstack.env
+    volumes:
+      - ./local-testing/localstack.sh:/bootstrap/localstack.sh
+    entrypoint: /bootstrap/localstack.sh
+    # Use deployment to auto-retry on timing issues (e.g. bootstrap running before Localstack is ready)
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks:
+      - hashstream-local
+networks:
+  hashstream-local:
